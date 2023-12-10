@@ -1,0 +1,20 @@
+[package]
+name = "aoc2015"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[[bin]]
+name = 'day-1'
+path = 'day-1/src/main.rs'
+
+[[bin]]
+name = 'day-2'
+path = 'day-2/src/main.rs'
+
+[[bin]]
+name = 'day-3'
+path = 'day-3/src/main.rs'
