@@ -39,9 +39,6 @@ def count_locations(steps, num_santas=1):
     return len(unique_locs)
 
 if __name__ == "__main__":
-
-    #2572
-    #2631
     steps = read_input()
     total_stops = count_locations(steps, num_santas=1)
     print("Total stops 1 Santa: ", total_stops)
