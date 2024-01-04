@@ -85,12 +85,9 @@ fn main(){
             }
         }
     }
-    let mut total_on = 0;
-    for row in 0..999{
-        for col in 0..999{
-            total_on += lights[row][col]
-        }
-    }
+
+    let total_on: i32 = lights.iter().map(|x| x.iter().sum::<i32>()).sum();
+
     // let total_on: i32 = lights.into_iter().map(|row| row.into_iter().sum::<u32>().collect()).sum();
     println!("Total lights on: {}", total_on)
 }
