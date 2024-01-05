@@ -1,40 +1,39 @@
 use std::collections::HashMap;
 
-
 fn add_vowel_count(letter: char, vowels: &mut HashMap<char, i32>) {
-    if letter == 'a' || letter == 'e' || letter == 'i' || letter == 'o' || letter == 'u'{
+    if letter == 'a' || letter == 'e' || letter == 'i' || letter == 'o' || letter == 'u' {
         *vowels.entry(letter).or_insert(1) += 1;
     }
 }
 
 fn not_contains_forbidden_string(slice: String) -> bool {
-    if slice.contains("ab") || slice.contains("cd") || slice.contains("pq") || slice.contains("xy") {
+    if slice.contains("ab") || slice.contains("cd") || slice.contains("pq") || slice.contains("xy")
+    {
         false
-    } else { true }
+    } else {
+        true
+    }
 }
 
 fn is_nice_part_1(input: String) -> bool {
-
     let mut has_vowels = false;
     let mut has_double = false;
     let mut no_forbidden = true;
 
     let mut prev_char = 'a';
-    let mut vowels:HashMap<char, i32> = HashMap::new();
+    let mut vowels: HashMap<char, i32> = HashMap::new();
 
-
-    for curr in input.chars().enumerate(){
+    for curr in input.chars().enumerate() {
         let index = curr.0;
         let curr_char = curr.1;
 
         if index > 0 {
-
             if !has_double {
                 if curr_char.eq(&prev_char) {
                     has_double = true;
                 }
             }
-            println!("{} {}" , format!("{}{}", prev_char, curr_char), no_forbidden);
+            println!("{} {}", format!("{}{}", prev_char, curr_char), no_forbidden);
             if no_forbidden {
                 no_forbidden = not_contains_forbidden_string(format!("{}{}", prev_char, curr_char))
             }
@@ -48,23 +47,23 @@ fn is_nice_part_1(input: String) -> bool {
             }
 
             prev_char = curr_char.clone();
-
         } else {
             add_vowel_count(curr_char, &mut vowels);
             prev_char = curr_char.clone();
         }
     }
     println!("{} {} {} {}", input, has_vowels, no_forbidden, has_double);
-    if has_vowels && no_forbidden && has_double { true }
-    else { false }
+    if has_vowels && no_forbidden && has_double {
+        true
+    } else {
+        false
+    }
 }
-
 
 #[cfg(test)]
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
-
 
     #[test]
     fn test_is_nice_part_1() {
