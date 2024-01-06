@@ -28,49 +28,64 @@ impl Instruction {
     }
 }
 
+fn parse_integers(locs: &str) -> (i32, i32) {
+    let split_locs: Vec<&str> = locs.split(",").collect();
+    let x_loc: i32 = if let Some(x) = split_locs.first() {
+        x.parse::<i32>().expect("Failed to parse integer")
+    } else {
+        0
+    };
+    let y_loc: i32 = if let Some(y) = split_locs.last() {
+        y.parse::<i32>().expect("Failed to parse integer")
+    } else {
+        0
+    };
+    (x_loc, y_loc)
+}
+
 fn parse_instructions(instructions: String) -> Vec<Instruction> {
     let mut parsed_instructions: Vec<Instruction> = Vec::new();
+
     for instruction in instructions.split("\n") {
-        let instruction_parts: Vec<&str> = instruction.split(",").collect();
+        println!("{}", instruction);
 
-        let first_part: Vec<&str> = instruction_parts[0]
-            .split("turn")
-            .map(|x| x.trim())
-            .collect();
-        let first_part_split: Vec<&str> = first_part[first_part.len() - 1].split(" ").collect();
+        let parts: Vec<&str> = instruction.split_whitespace().collect();
+        let mut locs_idx = 1;
+        let mut action_idx = 0;
+        if parts.len() > 4 {
+            locs_idx = 2;
+            action_idx = 1;
+        }
 
-        let action: Action = match first_part_split[0] {
-            "on" => Action::On,
-            "off" => Action::Off,
-            "toggle" => Action::Toggle,
-            _ => Action::On,
+        let action: Action = if let Some(part) = parts.get(action_idx) {
+            match *part {
+                "on" => Action::On,
+                "off" => Action::Off,
+                "toggle" => Action::Toggle,
+                _ => panic!("Invalid input: action type"),
+            }
+        } else {
+            Action::On
         };
 
-        let x_start: i32 = first_part_split[1]
-            .parse()
-            .expect("Failed to convert to int");
+        let xy_start: (i32, i32) = if let Some(locs) = parts.get(locs_idx) {
+            parse_integers(locs)
+        } else {
+            (0, 0)
+        };
 
-        let second_part: Vec<&str> = instruction_parts[1].split(" ").collect();
+        let xy_end: (i32, i32) = if let Some(locs) = parts.last() {
+            parse_integers(locs)
+        } else {
+            (0, 0)
+        };
 
-        let y_start: i32 = second_part[0].parse().expect("Failed to convert to int");
-        let x_end: i32 = second_part[second_part.len() - 1]
-            .parse()
-            .expect("Failed to convert to int");
-
-        let y_end: i32 = instruction_parts[instruction_parts.len() - 1]
-            .parse()
-            .expect("Failed to convert to int");
-
-        println!(
-            "{:?} x:{} y:{}  x_end:{} y_end:{}",
-            action, x_start, y_start, x_end, y_end
-        );
         parsed_instructions.push(Instruction {
             action,
-            x_start,
-            y_start,
-            x_end,
-            y_end,
+            x_start: xy_start.0,
+            y_start: xy_start.1,
+            x_end: xy_end.0,
+            y_end: xy_end.1,
         })
     }
     parsed_instructions
@@ -109,6 +124,7 @@ fn part_2_solution(
             for col in parsed_instruction.y_start..parsed_instruction.y_end + 1 {
                 match parsed_instruction.action {
                     Action::On => lights[row as usize][col as usize] += 1,
+                    // Action::On => lights.get(),
                     Action::Off => {
                         if 0 < lights[row as usize][col as usize] {
                             lights[row as usize][col as usize] -= 1
@@ -131,7 +147,6 @@ fn main() {
     let parsed_instructions: Vec<Instruction> = parse_instructions(instructions);
 
     let mut lights: Vec<Vec<i32>> = Vec::with_capacity(1000);
-    // lights = lights.iter().map(|x| x.push(vec![0; 1000])).collect();
     for _ in 0..1000 {
         lights.push(vec![0; 1000]);
     }
