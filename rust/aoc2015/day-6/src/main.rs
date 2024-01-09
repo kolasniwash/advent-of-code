@@ -57,15 +57,11 @@ fn parse_instructions(instructions: String) -> Vec<Instruction> {
             action_idx = 1;
         }
 
-        let action: Action = if let Some(part) = parts.get(action_idx) {
-            match *part {
-                "on" => Action::On,
-                "off" => Action::Off,
-                "toggle" => Action::Toggle,
-                _ => panic!("Invalid input: action type"),
-            }
-        } else {
-            Action::On
+        let action: Action = match parts.get(action_idx) {
+            Some(part@ &"on") => Action::On,
+            Some(part@ &"off") => Action::Off,
+            Some(part@ &"toggle") => Action::Toggle,
+            _ => panic!("Invalid input")
         };
 
         let xy_start: (i32, i32) = if let Some(locs) = parts.get(locs_idx) {
