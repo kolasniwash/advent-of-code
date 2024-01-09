@@ -28,10 +28,8 @@ fn is_nice_part_1(input: String) -> bool {
         let curr_char = curr.1;
 
         if index > 0 {
-            if !has_double {
-                if curr_char.eq(&prev_char) {
+            if !has_double && curr_char.eq(&prev_char) {
                     has_double = true;
-                }
             }
             println!("{} {}", format!("{}{}", prev_char, curr_char), no_forbidden);
             if no_forbidden {
