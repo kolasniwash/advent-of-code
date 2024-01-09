@@ -58,10 +58,10 @@ fn parse_instructions(instructions: String) -> Vec<Instruction> {
         }
 
         let action: Action = match parts.get(action_idx) {
-            Some(part@ &"on") => Action::On,
-            Some(part@ &"off") => Action::Off,
-            Some(part@ &"toggle") => Action::Toggle,
-            _ => panic!("Invalid input")
+            Some(_part @ &"on") => Action::On,
+            Some(_part @ &"off") => Action::Off,
+            Some(_part @ &"toggle") => Action::Toggle,
+            _ => panic!("Invalid input"),
         };
 
         let xy_start: (i32, i32) = if let Some(locs) = parts.get(locs_idx) {
@@ -95,12 +95,17 @@ fn part_1_solution(
         for row in parsed_instruction.x_start..parsed_instruction.x_end + 1 {
             for col in parsed_instruction.y_start..parsed_instruction.y_end + 1 {
                 if let Some(row_val) = lights.get_mut(row as usize) {
-                    if let Some(element) = row_val.get_mut(col as usize){
+                    if let Some(element) = row_val.get_mut(col as usize) {
                         match parsed_instruction.action {
                             Action::On => *element += 1,
                             Action::Off => *element = 0,
-                            Action::Toggle => if 0 == *element {*element = 1}
-                            else if 1 == *element { *element = 0 }
+                            Action::Toggle => {
+                                if 0 == *element {
+                                    *element = 1
+                                } else if 1 == *element {
+                                    *element = 0
+                                }
+                            }
                         }
                     }
                 }
@@ -118,11 +123,15 @@ fn part_2_solution(
         for row in parsed_instruction.x_start..parsed_instruction.x_end + 1 {
             for col in parsed_instruction.y_start..parsed_instruction.y_end + 1 {
                 if let Some(row_val) = lights.get_mut(row as usize) {
-                    if let Some(element) = row_val.get_mut(col as usize){
+                    if let Some(element) = row_val.get_mut(col as usize) {
                         match parsed_instruction.action {
                             Action::On => *element += 1,
-                            Action::Off => if 0 < *element { *element -= 1},
-                            Action::Toggle => *element += 2
+                            Action::Off => {
+                                if 0 < *element {
+                                    *element -= 1
+                                }
+                            }
+                            Action::Toggle => *element += 2,
                         }
                     }
                 }
