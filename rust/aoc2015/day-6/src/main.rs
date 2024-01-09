@@ -118,15 +118,14 @@ fn part_2_solution(
     for parsed_instruction in parsed_instructions.iter() {
         for row in parsed_instruction.x_start..parsed_instruction.x_end + 1 {
             for col in parsed_instruction.y_start..parsed_instruction.y_end + 1 {
-                match parsed_instruction.action {
-                    Action::On => lights[row as usize][col as usize] += 1,
-                    // Action::On => lights.get(),
-                    Action::Off => {
-                        if 0 < lights[row as usize][col as usize] {
-                            lights[row as usize][col as usize] -= 1
+                if let Some(row_val) = lights.get_mut(row as usize) {
+                    if let Some(element) = row_val.get_mut(col as usize){
+                        match parsed_instruction.action {
+                            Action::On => *element += 1,
+                            Action::Off => if 0 < *element { *element -= 1},
+                            Action::Toggle => *element += 2
                         }
                     }
-                    Action::Toggle => lights[row as usize][col as usize] += 2,
                 }
             }
         }
